@@ -16,40 +16,17 @@ from bikerental_model.config.core import DATASET_DIR, TRAINED_MODEL_DIR, config
 
 ##  Pre-Pipeline Preparation
 
-# 1. Extracts the title (Mr, Ms, etc) from the name variable
-def get_title(passenger):
-    line = passenger
-    if re.search('Mrs', line):
-        return 'Mrs'
-    elif re.search('Mr', line):
-        return 'Mr'
-    elif re.search('Miss', line):
-        return 'Miss'
-    elif re.search('Master', line):
-        return 'Master'
-    else:
-        return 'Other'
-
-
-# 2. processing cabin
-f1 = lambda x: 1 if type(x) == str else 0         ## Ternary Expression
-
-  
+def extract_year_month(df):
+  df['dteday']=pd.to_datetime(df['dteday'])
+  df['year']=df['dteday'].dt.year
+  df['month']=df['dteday'].dt.month
 
 def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
     """ Here we need to add things like feature engineering, data cleaning, etc. """
-
-    # data_frame["Title"] = data_frame["Name"].apply(get_title)       # Fetching title
-
-    # data_frame['FamilySize'] = data_frame['SibSp'] + data_frame['Parch'] + 1  # Family size
-
-    # data_frame['Has_cabin']=data_frame['Cabin'].apply(f1)               #  processing cabin 
-
-    # # drop unnecessary variables
-    # data_frame.drop(labels=config.model_config_.unused_fields, axis=1, inplace=True)
-
-    # return data_frame
+    # extract year and month from the date column and create two another columns
+    data_frame = extract_year_month(data_frame)
+    return data_frame
 
 
 
