@@ -27,31 +27,54 @@ class WeathersitImputer(BaseEstimator, TransformerMixin):
         self.most_frequent_category = None
 
     def fit(self,df,y=None,weathersit='weathersit'):
+        # YOUR CODE HERE
         self.most_frequent_category = df[weathersit].mode()[0]
         return self
 
     def transform(self,df,y=None,weathersit='weathersit'):
+        # YOUR CODE HERE
         df[weathersit] = df[weathersit].fillna(self.most_frequent_category)
         return df
 
 
-class Mapper(BaseEstimator, TransformerMixin):
-    """
-    Map categories in multiple columns to numerical values.
-    """
+# class Mapper(BaseEstimator, TransformerMixin):
+#     """
+#     Map categories in multiple columns to numerical values.
+#     """
 
-    def __init__(self, mappings):
-        self.mappings = mappings
+#     def __init__(self, mappings):
+#         self.mappings = mappings
 
-    def fit(self, X, y=None):
-        return self
+#     def fit(self, X, y=None):
+#         return self
 
-    def transform(self, X, y=None):
-        X = X.copy()  # Create a copy to avoid modifying the original DataFrame
-        for column, mapping in self.mappings.items():
-            if column in X.columns:  # Check if the column exists in the DataFrame
-                X[column] = X[column].replace(mapping)
-        return X
+#     def transform(self, X, y=None):
+#         X = X.copy()  # Create a copy to avoid modifying the original DataFrame
+#         for column, mapping in self.mappings.items():
+#             if column in X.columns:  # Check if the column exists in the DataFrame
+#                 X[column] = X[column].replace(mapping)
+#         return X
+
+# class Mapper(BaseEstimator, TransformerMixin):
+#     """Categorical variable mapper."""
+
+#     def __init__(self, variables: str, mappings: dict):
+
+#         if not isinstance(variables, str):
+#             raise ValueError("variables should be a str")
+
+#         self.variables = variables
+#         self.mappings = mappings
+
+#     def fit(self, X: pd.DataFrame, y: pd.Series = None):
+#         # we need the fit statement to accomodate the sklearn pipeline
+#         return self
+
+#     def transform(self, X: pd.DataFrame,y=None) -> pd.DataFrame:
+#         X = X.copy()
+#         X[self.variables] = X[self.variables].map(self.mappings).astype(int)
+
+#         return X
 
 class OutlierHandler(BaseEstimator, TransformerMixin):
     """
@@ -106,3 +129,24 @@ class WeekdayOneHotEncoder(BaseEstimator, TransformerMixin):
             df = pd.concat([df, df_encoded], axis=1)
         # If 'weekday' column is already encoded, return the DataFrame as is
         return df
+    
+class Mapper(BaseEstimator, TransformerMixin):
+    """Categorical variable mapper."""
+
+    def __init__(self, variables: str, mappings: dict):
+
+        if not isinstance(variables, str):
+            raise ValueError("variables should be a str")
+
+        self.variables = variables
+        self.mappings = mappings
+
+    def fit(self, X: pd.DataFrame, y: pd.Series = None):
+        # we need the fit statement to accomodate the sklearn pipeline
+        return self
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        X = X.copy()
+        X[self.variables] = X[self.variables].map(self.mappings).astype(int)
+
+        return X

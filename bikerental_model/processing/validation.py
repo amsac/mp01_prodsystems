@@ -10,8 +10,8 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel, ValidationError
 
-from titanic_model.config.core import config
-from titanic_model.processing.data_manager import pre_pipeline_preparation
+from bike_sharing_model.config.core import config
+from bike_sharing_model.processing.data_manager import pre_pipeline_preparation
 
 
 def validate_inputs(*, input_df: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[dict]]:
@@ -31,7 +31,6 @@ def validate_inputs(*, input_df: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[d
 
     return validated_data, errors
 
-# should we align it to the CSV columns, or the transformed dataset columns - Ask Rahul
 
 class DataInputSchema(BaseModel):
     month: Optional[int]

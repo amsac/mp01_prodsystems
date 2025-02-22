@@ -40,19 +40,25 @@ class ModelConfig(BaseModel):
     target: str
     features: List[str]
     unused_fields: List[str]
-    embarked_var: str 
-    gender_var:str 
-    title_var:str 
-    age_var: str 
-    gender_mappings: Dict[str, int]
-    embarked_mappings: Dict[str, int]
-    title_mappings: Dict[str, int]
-  
+    weekday_var: str 
+    weathersit_var: str
     test_size:float
     random_state: int
     n_estimators: int
     max_depth: int
     max_features: int
+    numeric_features: List[str]
+    categorical_features: List[str]
+    weekday_mapping: Dict[str, int]
+    workingday_mapping: Dict[str, int]
+    weathersit_mapping: Dict[str, int]
+    season_mapping: Dict[str, int]
+    hr_mapping: Dict[str, int]
+    holiday_mappings: Dict[str, int]
+    season_var: str
+    hr_var: str
+    holiday_var: str
+    workingday_var: str
 
 
 class Config(BaseModel):
