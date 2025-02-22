@@ -23,9 +23,7 @@ features:      # final features to be use
   - hum 
   - windspeed 
   - casual
-  - weekday  # generated  by  Sibsp + Parch +1 <--Before pipeline alongwith loading the data
   - registered   # generated cabin              <--Before pipeline alongwith loading the data
-  - cnt 
 
 unused_fields:  # Features to drop before pipeline
   - dteday
