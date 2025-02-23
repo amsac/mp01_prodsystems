@@ -13,11 +13,40 @@ class WeekdayImputer(BaseEstimator, TransformerMixin):
     def fit(self,df,y=None,dteday='dteday',weekday='weekday'):
         return self
 
-    def transform(self,df,y=None,dteday='dteday',weekday='weekday'):
-        day_names = df[dteday].dt.day_name()[:3]
-        df[weekday] = df[weekday].fillna(day_names)
-        df = df.drop(columns=[dteday])
-        return df
+    # def transform(self,df,y=None,dteday='dteday',weekday='weekday'):
+    #     print("reached transform")
+    #     print(df)
+    #     print(df[dteday])
+    #     day_names = df[dteday].dt.day_name()[:3]
+    #     print("*********&&&&&&&&&&&&&")
+    #     print(day_names)
+    #     df[weekday] = df[weekday].fillna(day_names)
+    #     print("df[weekday].isnull().sum()")
+    #     print(df[weekday].isnull().sum())
+    #     # df = df.drop(columns=[dteday])
+    #     return df
+    def transform(self, X):
+
+        """Fill missing 'weekday' values using day names from 'dteday'."""
+        X = X.copy()  # Avoid modifying original data
+
+        # Ensure 'dteday' column exists
+        if 'dteday' not in X:
+            raise ValueError("Column 'dteday' not found in input data.")
+
+        # Convert 'dteday' to datetime format
+        X['dteday'] = pd.to_datetime(X['dteday'])
+
+        # Find missing values in 'weekday' column
+        missing_indices = X[X['weekday'].isna()].index
+
+        # Extract day name and convert to first 3 letters (e.g., 'Monday' → 'Mon')
+        
+        X.loc[missing_indices, 'weekday'] = X.loc[missing_indices, 'dteday'].dt.day_name().str[:3]
+        X = X.drop(columns=['dteday'])
+        print("data info after weekday imputer")
+        print(X.info())
+        return X    
 
 
 class WeathersitImputer(BaseEstimator, TransformerMixin):
@@ -34,6 +63,8 @@ class WeathersitImputer(BaseEstimator, TransformerMixin):
     def transform(self,df,y=None,weathersit='weathersit'):
         # YOUR CODE HERE
         df[weathersit] = df[weathersit].fillna(self.most_frequent_category)
+        print("data info after WeathersitImputer imputer")
+        print(df.info())
         return df
 
 
@@ -122,13 +153,14 @@ class WeekdayOneHotEncoder(BaseEstimator, TransformerMixin):
 
     def transform(self, df):
         # Check if 'weekday' column exists before encoding
-        if 'weekday' in df.columns:
-            # YOUR CODE HERE
+        # if 'weekday' in df.columns:
+        #     # YOUR CODE HERE
             df_encoded = pd.get_dummies(df, columns=['weekday'], prefix='Weekday', dtype=int)
             df = df.drop(columns=['weekday'])
             df = pd.concat([df, df_encoded], axis=1)
         # If 'weekday' column is already encoded, return the DataFrame as is
-        return df
+
+            return df
     
 class Mapper(BaseEstimator, TransformerMixin):
     """Categorical variable mapper."""
@@ -148,5 +180,4 @@ class Mapper(BaseEstimator, TransformerMixin):
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         X = X.copy()
         X[self.variables] = X[self.variables].map(self.mappings).astype(int)
-
         return X

@@ -20,6 +20,7 @@ def extract_year_month(df):
   df['dteday']=pd.to_datetime(df['dteday'])
   df['year']=df['dteday'].dt.year
   df['month']=df['dteday'].dt.month
+  return df
 
 def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
@@ -36,6 +37,7 @@ def load_raw_dataset(*, file_name: str) -> pd.DataFrame:
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
     dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    # print(dataframe )
     transformed = pre_pipeline_preparation(data_frame=dataframe)
     return transformed
 

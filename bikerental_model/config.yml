@@ -9,24 +9,40 @@ target: cnt
 pipeline_name: bike_rental_model
 pipeline_save_file: bike_rental_model_output_v
 
-features:      # final features to be use
-  - month
+features:
+  - season
   - year
-  - season 
-  - hr 
+  - month
+  - hr
   - holiday
-  - weekday  # generated  by  Sibsp + Parch +1 <--Before pipeline alongwith loading the data
-  - workingday   # generated cabin              <--Before pipeline alongwith loading the data
-  - weathersit       # generated from name          <--Before pipeline alongwith loading the data
+  - weekday
+  - workingday
+  - weathersit
   - temp
   - atemp
-  - hum 
-  - windspeed 
-  - casual
-  - registered   # generated cabin              <--Before pipeline alongwith loading the data
+  - hum
+  - windspeed
+  - dteday
+
+# features:      # final features to be use
+#   - month
+#   - year
+#   - season 
+#   - hr 
+#   - holiday
+#   - weekday  # generated  by  Sibsp + Parch +1 <--Before pipeline alongwith loading the data
+#   - workingday   # generated cabin              <--Before pipeline alongwith loading the data
+#   - weathersit       # generated from name          <--Before pipeline alongwith loading the data
+#   - temp
+#   - atemp
+#   - hum 
+#   - windspeed 
+#   # generated cabin              <--Before pipeline alongwith loading the data
 
 unused_fields:  # Features to drop before pipeline
   - dteday
+  - casual
+  - registered
 
 # Features inside processing pipeline
 
@@ -60,7 +76,7 @@ test_size: 0.20
 # to set the random seed
 random_state: 42
 # alogrithm parameters
-n_estimators: 100
+n_estimators: 200
 max_depth: 5
 max_features: 3
 
@@ -80,9 +96,9 @@ workingday_mapping:
 
 weathersit_mapping:
   Clear: 1
-  Mist: 2
-  LightSnow: 3
-  HeavyRain: 4
+  Heavy Rain: 2
+  Light Rain: 3
+  Mist: 4
 
 season_mapping:
   spring: 1
