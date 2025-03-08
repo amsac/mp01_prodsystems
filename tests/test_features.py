@@ -52,22 +52,22 @@ def test_weekday_onehot_encoder():
     raw_col_length = len(df.columns)
 
     # Given
-    encoder = WeekdayOneHotEncoder()
+    encoder = WeekdayOneHotEncoder(variable="weekday")
     assert len(df) == 17379
 
     # When
     subject = encoder.fit(df).transform(df)
-    print(subject.columns)
+    print(list(subject.columns))
 
     # Then
     assert len(subject.columns) == raw_col_length + 7 - 1
-    assert 'Weekday_Mon' in subject.columns
-    assert 'Weekday_Tue' in subject.columns
-    assert 'Weekday_Wed' in subject.columns
-    assert 'Weekday_Thu' in subject.columns
-    assert 'Weekday_Fri' in subject.columns
-    assert 'Weekday_Sat' in subject.columns
-    assert 'Weekday_Sun' in subject.columns         
+    assert 'weekday_Mon' in subject.columns
+    assert 'weekday_Tue' in subject.columns
+    assert 'weekday_Wed' in subject.columns
+    assert 'weekday_Thu' in subject.columns
+    assert 'weekday_Fri' in subject.columns
+    assert 'weekday_Sat' in subject.columns
+    assert 'weekday_Sun' in subject.columns         
 
 def test_holiday_mapper():
 

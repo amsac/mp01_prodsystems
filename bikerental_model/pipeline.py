@@ -27,11 +27,6 @@ bikerental_pipe=Pipeline([
     ("hr_mapping", Mapper(config.model_config_.hr_var, config.model_config_.hr_mapping)),
     ("holiday_mappings", Mapper(config.model_config_.holiday_var, config.model_config_.holiday_mappings)),
     ("outlier_handler", OutlierHandler()),
-    ("weekday_one_hot_encoder", WeekdayOneHotEncoder()),
+    ("weekday_one_hot_encoder", WeekdayOneHotEncoder(variable="weekday")),
     ('regressor',RandomForestRegressor())
-    # ('model_rf', RandomForestRegressor(n_estimators=config.model_config_.n_estimators, 
-    #                                      max_depth=config.model_config_.max_depth, 
-    #                                      max_features=config.model_config_.max_features,
-    #                                      random_state=config.model_config_.random_state))
-          
      ])

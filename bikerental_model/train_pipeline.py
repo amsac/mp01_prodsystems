@@ -29,8 +29,7 @@ def run_training() -> None:
         data[features],  # predictors
         data[config.model_config_.target],
         test_size=config.model_config_.test_size,
-        # we are setting the random seed here
-        # for reproducibility
+        
         random_state=config.model_config_.random_state,
     )
     print("X_train shape",X_train.shape)
@@ -40,17 +39,9 @@ def run_training() -> None:
     # Pipeline fitting
     bikerental_pipe.fit(X_train,y_train)
     print("Pipeline fitting done")
-    # print("xtrain info",X_train.info())
-    # print("ytrain info",y_train.info())
-    # print("xtest info",X_test.info())
-    # print("ytest info",y_test.info())
     print("---------------`-------`--------------------prediction starts---------------`-------`--------------------")
-    # y_pred = bikerental_pipe.predict(X_test)
-    # print("Accuracy(in %):", accuracy_score(y_test, y_pred)*100)
-
-    # persist trained model
     save_pipeline(pipeline_to_persist= bikerental_pipe)
-    # printing the score
+
 
     y_pred = bikerental_pipe.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)

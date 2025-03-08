@@ -3,6 +3,7 @@ import sys
 import pandas as pd
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import OneHotEncoder
 
 class WeekdayImputer(BaseEstimator, TransformerMixin):
     """ Impute missing values in 'weekday' column by extracting dayname from 'dteday' column """
@@ -13,18 +14,6 @@ class WeekdayImputer(BaseEstimator, TransformerMixin):
     def fit(self,df,y=None,dteday='dteday',weekday='weekday'):
         return self
 
-    # def transform(self,df,y=None,dteday='dteday',weekday='weekday'):
-    #     print("reached transform")
-    #     print(df)
-    #     print(df[dteday])
-    #     day_names = df[dteday].dt.day_name()[:3]
-    #     print("*********&&&&&&&&&&&&&")
-    #     print(day_names)
-    #     df[weekday] = df[weekday].fillna(day_names)
-    #     print("df[weekday].isnull().sum()")
-    #     print(df[weekday].isnull().sum())
-    #     # df = df.drop(columns=[dteday])
-    #     return df
     def transform(self, X):
 
         """Fill missing 'weekday' values using day names from 'dteday'."""
@@ -68,44 +57,6 @@ class WeathersitImputer(BaseEstimator, TransformerMixin):
         return df
 
 
-# class Mapper(BaseEstimator, TransformerMixin):
-#     """
-#     Map categories in multiple columns to numerical values.
-#     """
-
-#     def __init__(self, mappings):
-#         self.mappings = mappings
-
-#     def fit(self, X, y=None):
-#         return self
-
-#     def transform(self, X, y=None):
-#         X = X.copy()  # Create a copy to avoid modifying the original DataFrame
-#         for column, mapping in self.mappings.items():
-#             if column in X.columns:  # Check if the column exists in the DataFrame
-#                 X[column] = X[column].replace(mapping)
-#         return X
-
-# class Mapper(BaseEstimator, TransformerMixin):
-#     """Categorical variable mapper."""
-
-#     def __init__(self, variables: str, mappings: dict):
-
-#         if not isinstance(variables, str):
-#             raise ValueError("variables should be a str")
-
-#         self.variables = variables
-#         self.mappings = mappings
-
-#     def fit(self, X: pd.DataFrame, y: pd.Series = None):
-#         # we need the fit statement to accomodate the sklearn pipeline
-#         return self
-
-#     def transform(self, X: pd.DataFrame,y=None) -> pd.DataFrame:
-#         X = X.copy()
-#         X[self.variables] = X[self.variables].map(self.mappings).astype(int)
-
-#         return X
 
 class OutlierHandler(BaseEstimator, TransformerMixin):
     """
@@ -143,28 +94,34 @@ class OutlierHandler(BaseEstimator, TransformerMixin):
 class WeekdayOneHotEncoder(BaseEstimator, TransformerMixin):
     """ One-hot encode weekday column """
 
-    def __init__(self,):
+    def __init__(self,variable:str):
         # YOUR CODE HERE
-        self.encoder = None
+        if not isinstance(variable, str):
+            raise ValueError("variable name should be a string")
+        self.variable = variable
+        self.encoder = OneHotEncoder(sparse_output=False)
+
 
     def fit(self,df,y=None):
-        # YOUR CODE HERE
+         # we need the fit statement to accomodate the sklearn pipeline
+        X = df.copy()
+        self.encoder.fit(X[[self.variable]])
+        # Get encoded feature names
+        self.encoded_features_names = self.encoder.get_feature_names_out([self.variable])
+        
         return self
 
     def transform(self, df):
-        # Check if 'weekday' column exists before encoding
-        # if 'weekday' in df.columns:
-        #     # YOUR CODE HERE
 
-            # df_encoded = pd.get_dummies(df, columns=['weekday'], prefix='Weekday', dtype=int)
-            # df = df.drop(columns=['weekday'])
-            # df = pd.concat([df, df_encoded], axis=1)
+        X = df.copy()
+        encoded_weekdays = self.encoder.transform(X[[self.variable]])
+        # Append encoded weekday features to X
+        X[self.encoded_features_names] = encoded_weekdays
+        # drop 'weekday' column after encoding
+        X.drop(self.variable, axis=1, inplace=True)        
+        return X
 
-        # If 'weekday' column is already encoded, return the DataFrame as is
-        if 'weekday' in df.columns:
-            df = pd.get_dummies(df, columns=['weekday'], prefix='Weekday', dtype=int)
 
-        return df
     
 class Mapper(BaseEstimator, TransformerMixin):
     """Categorical variable mapper."""
