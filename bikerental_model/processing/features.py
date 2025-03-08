@@ -155,12 +155,16 @@ class WeekdayOneHotEncoder(BaseEstimator, TransformerMixin):
         # Check if 'weekday' column exists before encoding
         # if 'weekday' in df.columns:
         #     # YOUR CODE HERE
-            df_encoded = pd.get_dummies(df, columns=['weekday'], prefix='Weekday', dtype=int)
-            df = df.drop(columns=['weekday'])
-            df = pd.concat([df, df_encoded], axis=1)
-        # If 'weekday' column is already encoded, return the DataFrame as is
 
-            return df
+            # df_encoded = pd.get_dummies(df, columns=['weekday'], prefix='Weekday', dtype=int)
+            # df = df.drop(columns=['weekday'])
+            # df = pd.concat([df, df_encoded], axis=1)
+
+        # If 'weekday' column is already encoded, return the DataFrame as is
+        if 'weekday' in df.columns:
+            df = pd.get_dummies(df, columns=['weekday'], prefix='Weekday', dtype=int)
+
+        return df
     
 class Mapper(BaseEstimator, TransformerMixin):
     """Categorical variable mapper."""

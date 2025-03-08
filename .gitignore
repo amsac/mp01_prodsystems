@@ -1,3 +1,7 @@
 *.pkl
 /bikemodel
 /misc
+/bikerental_model.egg-info/
+/dist/
+*__pycache__/
+*.pyc
